@@ -1,0 +1,35 @@
+[Unit]
+Description=ip-geo IP geolocation API
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/ip-geo
+# Adjust if node is installed elsewhere (check with: command -v node)
+ExecStart=/usr/bin/node server.js
+Environment=NODE_ENV=production
+Environment=PORT=3000
+# Only nginx on this machine can reach the app.
+Environment=HOST=127.0.0.1
+# Trust X-Forwarded-For; nginx overwrites it with the real client IP.
+Environment=TRUST_PROXY=true
+Restart=on-failure
+RestartSec=2
+
+# Run as a throwaway unprivileged user; the app only reads its own files.
+DynamicUser=yes
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+RestrictNamespaces=yes
+LockPersonality=yes
+CapabilityBoundingSet=
+
+[Install]
+WantedBy=multi-user.target
