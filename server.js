@@ -4,6 +4,8 @@ import { isIP } from 'node:net';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+// Bind address. Unset = all interfaces. Use 127.0.0.1 behind a local reverse proxy.
+const HOST = process.env.HOST;
 
 // Trust X-Forwarded-For when running behind a reverse proxy / load balancer.
 // Set TRUST_PROXY=false to disable if the app is exposed directly.
@@ -46,6 +48,6 @@ app.get('/:ip', (req, res) => {
   res.json(lookup(ip));
 });
 
-app.listen(PORT, () => {
-  console.log(`Server listening on http://localhost:${PORT}`);
+app.listen(PORT, HOST, () => {
+  console.log(`Server listening on http://${HOST || 'localhost'}:${PORT}`);
 });
